@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, FlatList, ActivityIndicator, Picker, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import { fs } from '../Config/Config';
 import StudentAttendance from './StudentAttendance';
-import EditAttendance from './EditAttendance'; 
+import EditAttendance from './EditAttendance';
 
 const Attendance = ({ route }) => {
   const { assignCourseId } = route.params;
@@ -130,6 +130,26 @@ const Attendance = ({ route }) => {
     return true;
   };
 
+  const renderHeader = () => (
+    <>
+      {courseData && (
+        <>
+          <Text style={styles.courseTitle}>{courseData.courseName} Attendance</Text>
+          <View style={styles.separator}></View>
+        </>
+      )}
+      {formLoading && <Text>Loading...</Text>}
+    </>
+  );
+
+  const renderItem = ({ item }) => (
+    <StudentAttendance
+      student={item}
+      attendance={attendance}
+      onAttendanceChange={handleAttendanceChange}
+    />
+  );
+
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -143,59 +163,45 @@ const Attendance = ({ route }) => {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      {courseData && (
+    <FlatList
+      ListHeaderComponent={
         <>
-          <Text style={styles.courseTitle}>{courseData.courseName} Attendance</Text>
-          <View style={styles.separator}></View>
-        </>
-      )}
-
-      {formLoading ? (
-        <Text>Loading...</Text>
-      ) : (
-        <View style={styles.formContainer}>
-          <Text style={styles.header}>Mark Attendance</Text>
-
-          <Text>Select Date:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Select Date"
-            value={selectedDate}
-            onChangeText={setSelectedDate}
-          />
-          <FlatList
-            data={students}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <StudentAttendance
-                student={item}
-                attendance={attendance}
-                onAttendanceChange={handleAttendanceChange}
+          {renderHeader()}
+          {!formLoading && (
+            <View style={styles.formContainer}>
+              <Text style={styles.header}>Mark Attendance</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Select Date"
+                value={selectedDate}
+                onChangeText={setSelectedDate}
               />
-            )}
-          />
-          <Button
-            title="Save Attendance"
-            onPress={handleSaveAttendance}
-            disabled={!isSaveEnabled()}
-          />
-        </View>
-      )}
-
-      <Button
-        title={editForm ? 'Close Review' : 'Show Attendance Records'}
-        onPress={() => setEditForm(!editForm)}
-      />
-      {editForm && (
-        <EditAttendance
-          assignCourseId={assignCourseId}
-          students={students}
-          attendanceDates={attendanceDates}
-          latestAttendance={latestAttendance}
-        />
-      )}
-    </ScrollView>
+              <Button
+                title="Save Attendance"
+                onPress={handleSaveAttendance}
+                disabled={!isSaveEnabled()}
+              />
+              <Button
+                title={editForm ? 'Close Review' : 'Show Attendance Records'}
+                onPress={() => setEditForm(!editForm)}
+              />
+              {editForm && (
+                <EditAttendance
+                  assignCourseId={assignCourseId}
+                  students={students}
+                  attendanceDates={attendanceDates}
+                  latestAttendance={latestAttendance}
+                />
+              )}
+            </View>
+          )}
+        </>
+      }
+      data={students}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id}
+      contentContainerStyle={{ flexGrow: 1 }}
+    />
   );
 };
 

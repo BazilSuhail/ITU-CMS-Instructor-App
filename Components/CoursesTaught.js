@@ -55,7 +55,7 @@ const CoursesTaught = () => {
     };
 
     const handleNavigateToMarkingCourse = (assignCourseId) => {
-        navigation.navigate('GradeStudents', { assignCourseId });
+        navigation.navigate('Marking', { assignCourseId });
     };
 
     const renderCourseItem = ({ item }) => (
