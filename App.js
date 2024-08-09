@@ -17,8 +17,7 @@ const App = () => {
     } else {
       setIsAuthenticated(false);
     }
-  }, [currentUser]);
-
+  }, [currentUser]); 
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

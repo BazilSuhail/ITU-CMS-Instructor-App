@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Button, FlatList, ActivityIndicator, Modal, TouchableOpacity, Platform } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { fs } from '../Config/Config';
 import StudentAttendance from './StudentAttendance';
 import EditAttendance from './EditAttendance';
@@ -8,7 +9,7 @@ const Attendance = ({ route }) => {
   const { assignCourseId } = route.params;
   const [courseData, setCourseData] = useState(null);
   const [students, setStudents] = useState([]);
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(null);
   const [attendance, setAttendance] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,6 +17,8 @@ const Attendance = ({ route }) => {
   const [latestAttendance, setLatestAttendance] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
   const [editForm, setEditForm] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
@@ -102,7 +105,7 @@ const Attendance = ({ route }) => {
         });
       }
 
-      setSelectedDate('');
+      setSelectedDate(null);
       setAttendance({});
 
       const updatedAttendanceDoc = await attendanceDocRef.get();
@@ -130,12 +133,19 @@ const Attendance = ({ route }) => {
     return true;
   };
 
+  const handleDateConfirm = (event, selectedDate) => {
+    if (event.type === 'set') {
+      setSelectedDate(selectedDate.toISOString().split('T')[0]);
+    }
+    setShowDatePicker(false);
+  };
+
   const renderHeader = () => (
     <>
       {courseData && (
         <>
-          <Text style={styles.courseTitle}>{courseData.courseName} Attendance</Text>
-          <View style={styles.separator}></View>
+          <Text className="text-2xl font-bold text-blue-800 text-center my-3">{courseData.courseName} Attendance</Text>
+          <View className="w-11/12 h-1 bg-blue-800 self-center mb-3"></View>
         </>
       )}
       {formLoading && <Text>Loading...</Text>}
@@ -152,7 +162,7 @@ const Attendance = ({ route }) => {
 
   if (loading) {
     return (
-      <View style={styles.centered}>
+      <View className="flex-1 justify-center items-center">
         <ActivityIndicator size="large" color="#003F92" />
       </View>
     );
@@ -163,91 +173,65 @@ const Attendance = ({ route }) => {
   }
 
   return (
-    <FlatList
-      ListHeaderComponent={
-        <>
-          {renderHeader()}
-          {!formLoading && (
-            <View style={styles.formContainer}>
-              <Text style={styles.header}>Mark Attendance</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Select Date"
-                value={selectedDate}
-                onChangeText={setSelectedDate}
-              />
-              <Button
-                title="Save Attendance"
-                onPress={handleSaveAttendance}
-                disabled={!isSaveEnabled()}
-              />
-              <Button
-                title={editForm ? 'Close Review' : 'Show Attendance Records'}
-                onPress={() => setEditForm(!editForm)}
-              />
-              {editForm && (
-                <EditAttendance
-                  assignCourseId={assignCourseId}
-                  students={students}
-                  attendanceDates={attendanceDates}
-                  latestAttendance={latestAttendance}
+    <View className="flex-1 p-4">
+      <FlatList
+        ListHeaderComponent={
+          <>
+            {renderHeader()}
+            {!formLoading && (
+              <View className="my-2 p-4 bg-gray-200 rounded-lg">
+                <Text className="text-xl text-blue-800 mb-2 font-bold">Mark Attendance</Text>
+                <TouchableOpacity className="border-2 border-blue-800 p-3 mb-2 rounded bg-white" onPress={() => setShowDatePicker(true)}>
+                  <Text className="text-blue-800">{selectedDate ? selectedDate : 'Select Date'}</Text>
+                </TouchableOpacity>
+                <Button
+                  title="Save Attendance"
+                  onPress={handleSaveAttendance}
+                  disabled={!isSaveEnabled()}
                 />
-              )}
-            </View>
-          )}
-        </>
-      }
-      data={students}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      contentContainerStyle={{ flexGrow: 1 }}
-    />
+                <Button
+                  title={editForm ? 'Close Review' : 'Show Attendance Records'}
+                  onPress={() => setEditForm(!editForm)}
+                />
+                {editForm && (
+                  <EditAttendance
+                    assignCourseId={assignCourseId}
+                    students={students}
+                    attendanceDates={attendanceDates}
+                    latestAttendance={latestAttendance}
+                  />
+                )}
+              </View>
+            )}
+          </>
+        }
+        data={students}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ flexGrow: 1 }}
+      />
+
+      {/* Date Picker Modal */}
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={showDatePicker}
+        onRequestClose={() => setShowDatePicker(false)}
+      >
+        <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+          <View className="bg-white p-4 rounded-lg w-4/5">
+            <DateTimePicker
+              value={selectedDate ? new Date(selectedDate) : new Date()}
+              mode="date"
+              display="default"
+              onChange={handleDateConfirm}
+            />
+            <Button title="Close" onPress={() => setShowDatePicker(false)} />
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 15,
-  },
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  courseTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#003F92',
-    textAlign: 'center',
-    marginVertical: 12,
-  },
-  separator: {
-    width: '95%',
-    height: 2,
-    backgroundColor: '#003F92',
-    alignSelf: 'center',
-    marginBottom: 15,
-  },
-  formContainer: {
-    marginVertical: 8,
-    padding: 15,
-    backgroundColor: '#f1f1f1',
-    borderRadius: 10,
-  },
-  header: {
-    fontSize: 20,
-    color: '#003F92',
-    marginBottom: 8,
-    fontWeight: 'bold',
-  },
-  input: {
-    borderColor: '#003F92',
-    borderWidth: 2,
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 5,
-  },
-});
 
 export default Attendance;

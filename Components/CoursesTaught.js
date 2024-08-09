@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, fs } from '../Config/Config';
 
@@ -32,6 +32,7 @@ const CoursesTaught = () => {
                             courseName: courseDoc.exists ? courseDoc.data().name : 'Unknown Course',
                             className: classDoc.exists ? classDoc.data().name : 'Unknown Class',
                             courseId: assignment.courseId,
+                            creditHours: courseDoc.exists ? courseDoc.data().creditHours : 'Unknown Hours',
                             classId: assignment.classId
                         };
                     }));
@@ -58,46 +59,58 @@ const CoursesTaught = () => {
         navigation.navigate('Marking', { assignCourseId });
     };
 
-    const renderCourseItem = ({ item }) => (
-        <View className="bg-custom-blue flex flex-col rounded-lg m-[5px] text-white p-[15px]" >
-            <View className="bg-gray-500 mt-[15px] rounded-lg mx-auto w-[100%] h-[230px]"></View>
-            <Text className="text-2xl font-bold my-[8px] ml-[5px]">{item.courseName}</Text>
-            <Text className="text-md text-gray-400 font-bold">{item.className}</Text>
-            <TouchableOpacity onPress={() => handleNavigateToCourse(item.assignCourseId)} className="mx-auto w-[100%] font-bold hover:bg-custom-back-grey my-[8px] bg-red-600 p-[8px] rounded-xl">
-                <Text className="text-white text-center">Mark Attendance</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleNavigateToMarkingCourse(item.assignCourseId)} className="mx-auto w-[100%] font-bold hover:bg-custom-back-grey my-[8px] bg-green-700 p-[8px] rounded-xl">
-                <Text className="text-white text-center">Grade Students</Text>
-            </TouchableOpacity>
+    const renderCourseItem = (item) => (
+        <View key={item.assignCourseId} className="bg-blue-950 h-[140px] flex flex-col rounded-lg m-[5px] text-white px-[15px] py-[10px]" >
+            <Text className="text-xl font-medium text-white my-[8px]">{item.courseName}</Text>
+
+            <View className="flex-row mt-[3px] mb-[5px] justify-between items-center">
+                <Text className="text-[16px] text-gray-400 font-bold">{item.className}</Text>
+                <View className="flex-row">
+                    <Text className="text-white text-[12px]"> Credit.Hrs: </Text>
+                    <Text className="font-extrabold text-[12px] bg-gray-300 text-center px-[8px] ml-[4px] text-blue-950 rounded-md ">{item.creditHours}</Text>
+                </View>
+            </View>
+
+            <View className="ml-auto mt-[8px]  flex-row ">
+                <TouchableOpacity onPress={() => handleNavigateToCourse(item.assignCourseId)} className="font-medium mr-[8px] bg-red-900 px-[8px] py-[4px] rounded-md">
+                    <Text className="text-white text-[15px] text-center">Mark Attendance</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleNavigateToMarkingCourse(item.assignCourseId)} className="font-medium bg-green-800 px-[8px] py-[4px] rounded-md">
+                    <Text className="text-white text-[15px] text-center">Grade Students</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 
     return (
-        <View className="h-full w-full p-[10px] bg-white">
-            {loading ? (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator size="large" color="#0000ff" />
+        <ScrollView className="h-full w-full px-[8px] pt-[50px] bg-gray-100">
+            <View>
+                <Text className="text-custom-blue text-2xl font-bold ml-[2px]">Courses:</Text>
+
+                <View className="border-2 border-gray-300 h-[105px] flex flex-col justify-between rounded-lg m-[5px] text-white px-[15px] py-[15px]" >
+                    <Text className="text-xl font-bold text-blue-950 ">This Week</Text>
+                    <Text className="text-[14px]  text-gray-400 font-bold">This week no work coming up immediately.</Text>
                 </View>
-            ) : error ? (
-                <View className="flex-1 justify-center items-center">
-                    <Text>Error: {error}</Text>
-                </View>
-            ) : (
-                <View>
-                    <Text className="text-custom-blue text-2xl font-bold my-[12px] ml-[10px]">Courses:</Text>
-                    {courses.length > 0 ? (
-                        <FlatList
-                            data={courses}
-                            renderItem={renderCourseItem}
-                            keyExtractor={(item) => item.assignCourseId}
-                            contentContainerStyle={{ flexGrow: 1 }}
-                        />
-                    ) : (
-                        <Text>No courses assigned.</Text>
-                    )}
-                </View>
-            )}
-        </View>
+
+                {loading ? (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    </View>
+                ) : error ? (
+                    <View className="flex-1 justify-center items-center">
+                        <Text>Error: {error}</Text>
+                    </View>
+                ) : (
+                    <View>
+                        {courses.length > 0 ? (
+                            courses.map(renderCourseItem)
+                        ) : (
+                            <Text>No courses assigned.</Text>
+                        )}
+                    </View>
+                )}
+            </View>
+        </ScrollView>
     );
 };
 
