@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { fs } from '../Config/Config';
-import StudentAttendance from './StudentAttendance'; 
-
+import StudentAttendance from './StudentAttendance';
 import { Picker } from '@react-native-picker/picker';
 
 const EditAttendance = ({ assignCourseId, students, attendanceDates, latestAttendance }) => {
@@ -68,14 +67,14 @@ const EditAttendance = ({ assignCourseId, students, attendanceDates, latestAtten
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Update Attendance</Text>
+    <View className="flex">
+      <Text className="text-lg font-bold text-blue-800 mb-2">Update Attendance</Text>
 
       <Text>Select Date:</Text>
       <Picker
         selectedValue={viewDate}
         onValueChange={handleViewDateChange}
-        style={styles.picker}
+        className="h-12 w-full my-2"
       >
         <Picker.Item label="Select a date" value="" />
         {attendanceDates.map(date => (
@@ -84,20 +83,19 @@ const EditAttendance = ({ assignCourseId, students, attendanceDates, latestAtten
       </Picker>
 
       {viewDate && (
-        <View style={styles.tableContainer}>
-          <Text style={styles.tableHeader}>Student's Name</Text>
-          <Text style={styles.tableHeader}>Attendance Status</Text>
-          <FlatList
-            data={students}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <StudentAttendance
-                student={item}
-                attendance={attendance}
-                onAttendanceChange={handleAttendanceChange}
-              />
-            )}
-          />
+        <View className="mt-4 rounded-md bg-white">
+          <View className="flex-row justify-around">
+            <Text className="text-lg font-bold text-blue-800 mb-2">Name</Text>
+            <Text className="text-lg font-bold text-blue-800 mb-2">Attendance Status</Text>
+          </View>
+          {students.map(student => (
+            <StudentAttendance
+              key={student.id}
+              student={student}
+              attendance={attendance}
+              onAttendanceChange={handleAttendanceChange}
+            />
+          ))}
           <Button
             title="Update Attendance"
             onPress={handleSaveAttendance}
@@ -109,37 +107,5 @@ const EditAttendance = ({ assignCourseId, students, attendanceDates, latestAtten
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 15,
-  },
-  header: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#003F92',
-    marginBottom: 8,
-  },
-  picker: {
-    height: 50,
-    width: '100%',
-    marginVertical: 5,
-  },
-  tableContainer: {
-    marginTop: 15,
-    borderWidth: 1,
-    borderColor: '#003F92',
-    borderRadius: 5,
-    padding: 10,
-    backgroundColor: '#f1f1f1',
-  },
-  tableHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#003F92',
-    marginVertical: 5,
-  },
-});
 
 export default EditAttendance;
