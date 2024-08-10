@@ -46,7 +46,7 @@ const SignIn = () => {
   };
 
   return (
-    <View className="flex-1  bg-custom-blue">
+    <View className="flex-1 bg-custom-blue">
       <Image
         source={itu}
         className="w-[250px] h-[250px] mx-auto mt-[80px] mb-[55px]"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button,TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import { fs } from '../Config/Config';
 import { Picker } from '@react-native-picker/picker';
 
@@ -167,7 +167,7 @@ const Marking = ({ route }) => {
     const allMarksEntered = students.every(student => criteria.every(c => marks[student.id]?.[c.assessment] !== undefined));
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView className="pt-[48px] px-4">
             {loading ? (
                 <View style={styles.loaderContainer}>
                     <ActivityIndicator size="large" color="#003f92" />
@@ -178,64 +178,97 @@ const Marking = ({ route }) => {
                 <View>
                     <View style={styles.criteriaContainer}>
                         <Text style={styles.totalWeightage}>Total Weightage: {totalWeightage}%</Text>
-                        <View style={styles.criteriaList}>
-                            {criteria.map((criterion, index) => (
-                                <View key={index} style={styles.criterion}>
-                                    {editingCriteria === index ? (
-                                        <View>
-                                            <TextInput
-                                                style={styles.input}
-                                                value={criterion.assessment}
-                                                onChangeText={(text) =>
-                                                    setCriteria((prev) =>
-                                                        prev.map((item, i) =>
-                                                            i === index ? { ...item, assessment: text } : item
-                                                        )
-                                                    )
-                                                }
-                                            />
-                                            <TextInput
-                                                style={styles.input}
-                                                value={criterion.weightage}
-                                                keyboardType="numeric"
-                                                onChangeText={(text) =>
-                                                    setCriteria((prev) =>
-                                                        prev.map((item, i) =>
-                                                            i === index ? { ...item, weightage: text } : item
-                                                        )
-                                                    )
-                                                }
-                                            />
-                                            <TextInput
-                                                style={styles.input}
-                                                value={criterion.totalMarks}
-                                                keyboardType="numeric"
-                                                onChangeText={(text) =>
-                                                    setCriteria((prev) =>
-                                                        prev.map((item, i) =>
-                                                            i === index ? { ...item, totalMarks: text } : item
-                                                        )
-                                                    )
-                                                }
-                                            />
-                                            <Button title="Update Criteria" onPress={handleSaveMarks} disabled={!allCriteriaFilled || !allMarksEntered} />
-                                        </View>
-                                    ) : (
-                                        <View style={styles.criterionDetails}>
-                                            <Text style={styles.criterionText}>Assessment Name: {criterion.assessment}</Text>
-                                            <Text style={styles.criterionText}>Weightage: {criterion.weightage}%</Text>
-                                            <Text style={styles.criterionText}>Total Marks: {criterion.totalMarks}</Text>
-                                            <TouchableOpacity onPress={() => handleEditCriteria(index)} style={styles.editButton}>
-                                                <Text style={styles.buttonText}>Edit</Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => handleDeleteCriteria(index)} style={styles.deleteButton}>
-                                                <Text style={styles.buttonText}>Delete</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    )}
+                        <ScrollView horizontal className="px-2 py-4 bg-gray-100">
+                            <View className="border border-gray-300 rounded-lg overflow-hidden">
+                                <View className="flex-row bg-gray-200 border-b border-gray-300">
+                                    <View className="w-[150px] p-2 border-r border-gray-300">
+                                        <Text className="font-bold">Assessment</Text>
+                                    </View>
+                                    <View className="w-[150px] p-2 border-r border-gray-300">
+                                        <Text className="font-bold">Weightage (%)</Text>
+                                    </View>
+                                    <View className="w-[150px] p-2 border-r border-gray-300">
+                                        <Text className="font-bold">Total Marks</Text>
+                                    </View>
+                                    <View className="w-[150px] p-2">
+                                        <Text className="font-bold">Actions</Text>
+                                    </View>
                                 </View>
-                            ))}
-                        </View>
+                                {criteria.map((criterion, index) => (
+                                    <View key={index} className="flex-row border-b border-gray-300">
+                                        {editingCriteria === index ? (
+                                            <View className="flex-row">
+                                                <View className="w-[150px] p-2 border-r border-gray-300">
+                                                    <TextInput
+                                                        className="border border-gray-300 p-2 rounded"
+                                                        value={criterion.assessment}
+                                                        onChangeText={(text) =>
+                                                            setCriteria((prev) =>
+                                                                prev.map((item, i) =>
+                                                                    i === index ? { ...item, assessment: text } : item
+                                                                )
+                                                            )
+                                                        }
+                                                    />
+                                                </View>
+                                                <View className="w-[150px] p-2 border-r border-gray-300">
+                                                    <TextInput
+                                                        className="border border-gray-300 p-2 rounded"
+                                                        value={criterion.weightage}
+                                                        keyboardType="numeric"
+                                                        onChangeText={(text) =>
+                                                            setCriteria((prev) =>
+                                                                prev.map((item, i) =>
+                                                                    i === index ? { ...item, weightage: text } : item
+                                                                )
+                                                            )
+                                                        }
+                                                    />
+                                                </View>
+                                                <View className="w-[150px] p-2 border-r border-gray-300">
+                                                    <TextInput
+                                                        className="border border-gray-300 p-2 rounded"
+                                                        value={criterion.totalMarks}
+                                                        keyboardType="numeric"
+                                                        onChangeText={(text) =>
+                                                            setCriteria((prev) =>
+                                                                prev.map((item, i) =>
+                                                                    i === index ? { ...item, totalMarks: text } : item
+                                                                )
+                                                            )
+                                                        }
+                                                    />
+                                                </View>
+                                                <View className="w-[150px] p-2">
+                                                    <Button title="Update" onPress={handleSaveMarks} disabled={!allCriteriaFilled || !allMarksEntered} />
+                                                </View>
+                                            </View>
+                                        ) : (
+                                            <View className="flex-row">
+                                                <View className="w-[150px] p-2 border-r border-gray-300">
+                                                    <Text>{criterion.assessment}</Text>
+                                                </View>
+                                                <View className="w-[150px] p-2 border-r border-gray-300">
+                                                    <Text>{criterion.weightage}%</Text>
+                                                </View>
+                                                <View className="w-[150px] p-2 border-r border-gray-300">
+                                                    <Text>{criterion.totalMarks}</Text>
+                                                </View>
+                                                <View className="w-[150px] p-2 flex-row justify-around">
+                                                    <TouchableOpacity onPress={() => handleEditCriteria(index)} className="bg-blue-500 p-1 rounded">
+                                                        <Text className="text-white">Edit</Text>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleDeleteCriteria(index)} className="bg-red-500 p-1 rounded">
+                                                        <Text className="text-white">Delete</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        )}
+                                    </View>
+                                ))}
+                            </View>
+                        </ScrollView>
+
                         <Text style={styles.sectionTitle}>Define Grading Criteria</Text>
                         <View>
                             <TextInput
@@ -268,11 +301,11 @@ const Marking = ({ route }) => {
                             {/* Table-like structure */}
                             {students.map((student) => (
                                 <View key={student.id} style={styles.row}>
-                                    <Text style={styles.studentName}>{student.name}</Text>
+                                    <Text className="text-blue-950  ml-[5px] font-medium">{student.name}</Text>
                                     {criteria.map((criterion, index) => (
-                                        <View key={index} style={styles.row}>
+                                        <View key={index} className="text-blue-950 ml-[5px]  font-medium">
                                             <TextInput
-                                                style={styles.input}
+                                                className="text-blue-950  ml-[5px] font-medium"
                                                 value={marks[student.id]?.[criterion.assessment] || ''}
                                                 keyboardType="numeric"
                                                 onChangeText={(text) =>
@@ -286,7 +319,7 @@ const Marking = ({ route }) => {
                                                 }
                                                 editable={isEditing}
                                             />
-                                            <Text style={styles.weightedMarks}>
+                                            <Text className="text-blue-950 ml-[5px] font-medium">
                                                 {marks[student.id]?.[criterion.assessment] !== undefined
                                                     ? ((marks[student.id][criterion.assessment] / criterion.totalMarks) * criterion.weightage).toFixed(2)
                                                     : ''}
@@ -312,6 +345,7 @@ const Marking = ({ route }) => {
                                     </Picker>
                                 </View>
                             ))}
+
                             <View style={styles.buttonContainer}>
                                 <Button title="Save Marks" onPress={handleSaveMarks} disabled={!allCriteriaFilled || !allMarksEntered} />
                                 <Button title={isEditing ? 'Stop Editing' : 'Edit Marks'} onPress={() => setIsEditing(!isEditing)} />
@@ -355,6 +389,9 @@ const Marking = ({ route }) => {
                     </View>
                 </View>
             )}
+            <View className="h-[55px]">
+
+            </View>
         </ScrollView>
     );
 };
@@ -445,5 +482,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-}); 
+});
 export default Marking;
