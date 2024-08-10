@@ -1,63 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, ActivityIndicator, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Button, Modal, TouchableOpacity, ActivityIndicator } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { fs } from '../Config/Config';
 import StudentAttendance from './StudentAttendance';
 import EditAttendance from './EditAttendance';
 import { useNavigation } from '@react-navigation/native';
-
-import { Ionicons } from '@expo/vector-icons'; // For Expo
+import { Ionicons } from '@expo/vector-icons';
 
 // Header Component
-const Header = ({ courseData, formLoading, selectedDate, setShowDatePicker, handleSaveAttendance, isSaveEnabled, onBack }) => (
-
+const Heading = ({ courseData, onBack, onUpdateAttendance, onMarkAttendance }) => (
   <>
     <View className="flex justify-between mb-2">
       <View className="flex-row items-center">
         <Ionicons name="arrow-back" onPress={onBack} size={26} color="#003F92" />
         {courseData && (
-          <Text className="text-xl ml-[8px] font-bold text-blue-700 text-center my-3">{courseData.courseName} <Text className="text-blue-900">Attendance</Text></Text>
+          <Text className="text-xl ml-[8px] font-bold text-blue-700 text-center my-3">
+            {courseData.courseName} <Text className="text-blue-900">Attendance</Text>
+          </Text>
         )}
       </View>
       <View className="w-[100%] h-[2px] bg-blue-800 self-center mb-3"></View>
     </View>
+    <View className="flex-row justify-between mb-3">
+      <TouchableOpacity className="bg-blue-950 p-3 mb-2 rounded-xl" onPress={onMarkAttendance}>
+        <Text className="text-blue-50 text-center text-lg font-medium">Mark Attendance</Text>
+      </TouchableOpacity>
+      <TouchableOpacity className="bg-blue-950 p-3 mb-2 rounded-xl" onPress={onUpdateAttendance}>
+        <Text className="text-blue-50 text-center text-lg font-medium">Update Attendance</Text>
+      </TouchableOpacity>
+    </View>
+  </>
+);
 
+// Header Component
+const Header = ({ formLoading, selectedDate, setShowDatePicker, handleSaveAttendance, isSaveEnabled }) => (
+  <>
     {formLoading && <Text>Loading...</Text>}
     {!formLoading && (
-      <View className="mn-2 p-3 rounded-lg">
-         <Text className="text-blue-900 font-semibold text-lg mb-[5px] underline">Select a Date:</Text>
-
+      <View className="p-1 rounded-lg">
+        <Text className="text-blue-900 font-semibold text-lg mb-[5px] underline">Select a Date:</Text>
         <TouchableOpacity className="bg-blue-950 p-3 mb-2 rounded-xl" onPress={() => setShowDatePicker(true)}>
-          <Text className="text-blue-50 text-center text-lg font-medium">{selectedDate ? selectedDate : 'Select Date'}</Text>
+          <Text className="text-blue-50 text-center text-lg font-medium">
+            {selectedDate ? selectedDate : 'Select Date'}
+          </Text>
         </TouchableOpacity>
 
-        {isSaveEnabled() ?
+        {isSaveEnabled() ? (
           <TouchableOpacity className="bg-green-600 p-3 mb-2 rounded-xl" onPress={handleSaveAttendance}>
-            <Text className="text-blue-50 text-center text-lg font-medium">Save Attendace</Text>
+            <Text className="text-blue-50 text-center text-lg font-medium">Save Attendance</Text>
           </TouchableOpacity>
-          : <>
-          
-          <View className="bg-gray-400 p-3 mb-2 rounded-xl">
-            <Text className="text-gray-500 text-center text-lg font-medium">Save Attendace</Text>
+        ) : (
+          <>
+            <View className="bg-gray-400 p-3 mb-2 rounded-xl">
+              <Text className="text-gray-500 text-center text-lg font-medium">Save Attendance</Text>
             </View>
-            <Text className="text-red-600 text-[14px] font-medium">Select Date and Mark Attendace of All Students to Save Attendance*</Text>
-
+            <Text className="text-red-600 text-[14px] font-medium">
+              Select Date and Mark Attendance of All Students to Save Attendance*
+            </Text>
           </>
-
-        }
-
-        {/*
-        <Button
-          title="Save Attendance"
-          onPress={handleSaveAttendance}
-          disabled={!isSaveEnabled()}
-        /> */}
+        )}
       </View>
     )}
   </>
 );
-
-
 
 // DatePicker Modal Component
 const DatePickerModal = ({ showDatePicker, handleDateConfirm, setShowDatePicker }) => (
@@ -81,7 +86,28 @@ const DatePickerModal = ({ showDatePicker, handleDateConfirm, setShowDatePicker 
   </Modal>
 );
 
-// Attendance Component
+// MarkAttendance Component
+const MarkAttendance = ({ students, attendance, handleAttendanceChange, selectedDate, handleSaveAttendance, isSaveEnabled }) => (
+  <View className="mb-4 bg-white rounded-lg py-2">
+    <View className="flex-row justify-between px-4">
+      <Text className="text-lg font-bold text-blue-800 mb-2">Name</Text>
+      <Text className="text-lg font-bold text-blue-800 mb-2">Attendance Status</Text>
+    </View>
+    {students.length > 0 ? (
+      students.map(student => (
+        <StudentAttendance
+          key={student.id}
+          student={student}
+          attendance={attendance}
+          onAttendanceChange={handleAttendanceChange}
+        />
+      ))
+    ) : (
+      <Text>No students available</Text>
+    )}
+  </View>
+);
+
 const Attendance = ({ route }) => {
   const navigation = useNavigation();
   const { assignCourseId } = route.params;
@@ -94,9 +120,8 @@ const Attendance = ({ route }) => {
   const [attendanceDates, setAttendanceDates] = useState([]);
   const [latestAttendance, setLatestAttendance] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
-  const [editForm, setEditForm] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [viewMode, setViewMode] = useState('mark'); // 'mark' or 'update'
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
@@ -128,7 +153,7 @@ const Attendance = ({ route }) => {
           const attendanceDoc = await attendanceDocRef.get();
 
           if (attendanceDoc.exists) {
-            const attendanceData = attendanceDoc.data().attendances;
+            const attendanceData = attendanceDoc.data().attendances || [];
             setAttendanceDates(attendanceData.map(record => record.date));
 
             if (attendanceData.length > 0) {
@@ -137,6 +162,8 @@ const Attendance = ({ route }) => {
               });
               setLatestAttendance(latest);
             }
+          } else {
+            setAttendanceDates([]); // Ensure this is set even if no document exists
           }
         } else {
           setError('No assignment data found');
@@ -166,10 +193,13 @@ const Attendance = ({ route }) => {
 
       if (attendanceDoc.exists) {
         await attendanceDocRef.update({
-          attendances: [...attendanceDoc.data().attendances, {
-            date: selectedDate,
-            records: attendance,
-          }],
+          attendances: [
+            ...attendanceDoc.data().attendances,
+            {
+              date: selectedDate,
+              records: attendance,
+            },
+          ],
         });
       } else {
         await attendanceDocRef.set({
@@ -188,16 +218,13 @@ const Attendance = ({ route }) => {
 
       const updatedAttendanceDoc = await attendanceDocRef.get();
       if (updatedAttendanceDoc.exists) {
-        const updatedAttendanceData = updatedAttendanceDoc.data().attendances;
+        const updatedAttendanceData = updatedAttendanceDoc.data().attendances || [];
         const latest = updatedAttendanceData.reduce((latestRecord, currentRecord) => {
           return new Date(latestRecord.date) > new Date(currentRecord.date) ? latestRecord : currentRecord;
         });
         setLatestAttendance(latest);
         setAttendanceDates(updatedAttendanceData.map(record => record.date));
       }
-
-      // Set editForm to true after successfully saving attendance
-      setEditForm(true);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -205,70 +232,52 @@ const Attendance = ({ route }) => {
     }
   };
 
-  const isSaveEnabled = () => {
-    if (!selectedDate) return false;
-    if (students.length === 0) return false;
-    for (const student of students) {
-      if (!attendance.hasOwnProperty(student.id)) return false;
+  const handleDateConfirm = (event, date) => {
+    if (date) {
+      setSelectedDate(date.toISOString().split('T')[0]);
+      setShowDatePicker(false);
     }
-    return true;
   };
 
-  const handleDateConfirm = (event, selectedDate) => {
-    if (event.type === 'set') {
-      setSelectedDate(selectedDate.toISOString().split('T')[0]);
-    }
-    setShowDatePicker(false);
-  };
-
-  if (loading) {
-    return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#003F92" />
-      </View>
-    );
-  }
-
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
+  const isSaveEnabled = () => selectedDate && Object.keys(attendance).length > 0;
 
   return (
-    <ScrollView className="flex-1 bg-gray-200 pb-[65px] pt-[45px] px-3">
-      <Header
-        courseData={courseData}
-        formLoading={formLoading}
-        selectedDate={selectedDate}
-        setShowDatePicker={setShowDatePicker}
-        handleSaveAttendance={handleSaveAttendance}
-        isSaveEnabled={isSaveEnabled}
-        onBack={() => navigation.goBack()}
-      />
-      <View className="mb-4 bg-white rounded-lg py-2">
-        <View className="flex-row justify-between px-4">
-          <Text className="text-lg font-bold text-blue-800 mb-2">Name</Text>
-          <Text className="text-lg font-bold text-blue-800 mb-2">Attendance Status</Text>
-        </View>
-        {students.map(student => (
-          <StudentAttendance
-            key={student.id}
-            student={student}
-            attendance={attendance}
-            onAttendanceChange={handleAttendanceChange}
-          />
-        ))}
-      </View>
+    <View className="flex px-4 pt-[48px] bg-gray-100">
 
-      <Button
-        title={editForm ? 'Close Review' : 'Show Attendance Records'}
-        onPress={() => setEditForm(!editForm)}
+      <Heading
+        courseData={courseData}
+        onBack={() => navigation.goBack()}
+        onMarkAttendance={() => setViewMode('mark')}
+        onUpdateAttendance={() => setViewMode('update')}
       />
-      {editForm && (
+      {error && <Text className="text-red-600">{error}</Text>}
+      {loading ? (
+        <View className="flex justify-center items-center h-screen">
+          <ActivityIndicator size="large" color="#007bff" />
+        </View>
+      ) : viewMode === 'mark' ? (
+        <>
+          <Header
+            formLoading={formLoading}
+            selectedDate={selectedDate}
+            setShowDatePicker={setShowDatePicker}
+            handleSaveAttendance={handleSaveAttendance}
+            isSaveEnabled={isSaveEnabled}
+          />
+          <MarkAttendance
+            students={students}
+            attendance={attendance}
+            handleAttendanceChange={handleAttendanceChange}
+            selectedDate={selectedDate}
+            handleSaveAttendance={handleSaveAttendance}
+            isSaveEnabled={isSaveEnabled}
+          />
+        </>
+      ) : (
         <EditAttendance
           assignCourseId={assignCourseId}
           students={students}
           attendanceDates={attendanceDates}
-          latestAttendance={latestAttendance}
         />
       )}
       <DatePickerModal
@@ -276,9 +285,8 @@ const Attendance = ({ route }) => {
         handleDateConfirm={handleDateConfirm}
         setShowDatePicker={setShowDatePicker}
       />
-    </ScrollView>
+    </View>
   );
 };
-
 
 export default Attendance;
