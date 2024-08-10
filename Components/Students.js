@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, Image, Modal, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, Image, Modal, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { auth, fs } from '../Config/Config'; 
+import { auth, fs } from '../Config/Config';
 import itu from "../assets/itu.png";
 import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons from Expo
 
@@ -68,6 +68,26 @@ const Students = () => {
         fetchCourses();
     }, []);
 
+    const [animation] = useState(new Animated.Value(-300)); // Start position off-screen
+
+    useEffect(() => {
+        if (isModalVisible) {
+            // Slide in animation
+            Animated.timing(animation, {
+                toValue: 0,
+                duration: 300,
+                useNativeDriver: true,
+            }).start();
+        } else {
+            // Slide out animation
+            Animated.timing(animation, {
+                toValue: -300,
+                duration: 300,
+                useNativeDriver: true,
+            }).start();
+        }
+    }, [isModalVisible]);
+
     const handleNavigateToCourse = (assignCourseId) => {
         navigation.navigate('StudentList', { assignCourseId });
     };
@@ -75,7 +95,7 @@ const Students = () => {
     const handleLogout = () => {
         auth.signOut()
             .then(() => {
-                navigation.navigate('SignIn'); // Navigate to sign-in page
+                navigation.navigate('Signin'); // Navigate to sign-in page
                 setIsModalVisible(false); // Hide the modal
             })
             .catch((error) => {
@@ -113,7 +133,7 @@ const Students = () => {
         <ScrollView className="flex-1 bg-gray-100">
             <View className="w-screen pt-[45px] bg-custom-blue h-[105px] flex-row justify-between items-center px-2">
                 <Image source={itu} className="w-[40px] h-[40px]" />
-                
+
                 <TouchableOpacity onPress={() => setIsModalVisible(true)} className="p-2">
                     <MaterialIcons name="logout" size={24} color="white" />
                 </TouchableOpacity>
@@ -149,12 +169,17 @@ const Students = () => {
             {/* Modal for logout confirmation */}
             <Modal
                 transparent={true}
-                animationType="slide"
-                visible={isModalVisible}
+                visible={isModalVisible || animation.interpolate({ inputRange: [-300, 0], outputRange: [true, false] })}
+                animationType="none" // Disable default animation
                 onRequestClose={() => setIsModalVisible(false)}
             >
-                <View className="flex-1 justify-center items-center bg-gray-800 bg-opacity-70">
-                    <View className="bg-white p-6 rounded-lg shadow-lg">
+                <View className="flex-1 justify-center items-center bg-[gray]/50">
+                    <Animated.View
+                        style={{
+                            transform: [{ translateX: animation }],
+                        }}
+                        className="bg-white p-6 rounded-lg shadow-lg"
+                    >
                         <Text className="text-lg font-bold mb-4">Logout</Text>
                         <Text className="mb-4">Are you sure you want to logout?</Text>
                         <TouchableOpacity
@@ -169,7 +194,7 @@ const Students = () => {
                         >
                             <Text className="text-blue-500 text-center">Cancel</Text>
                         </TouchableOpacity>
-                    </View>
+                    </Animated.View>
                 </View>
             </Modal>
         </ScrollView>

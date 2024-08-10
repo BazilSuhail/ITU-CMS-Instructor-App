@@ -1,5 +1,5 @@
-import React from 'react'; 
-import { createStackNavigator , } from '@react-navigation/stack'; 
+import React from 'react';
+import { createStackNavigator, } from '@react-navigation/stack';
 import StudentList from './StudentList';
 import Students from './Students';
 import Signin from './Signin';
@@ -17,15 +17,15 @@ const Courses = () => {
                     headerShown: false // Hide the header for this screen
                 }}
             />
-             <Stack.Screen
+            <Stack.Screen
                 name="StudentList"
                 component={StudentList}
                 options={{
                     title: 'Student List',
                     headerShown: false // Hide the header for this screen
                 }}
-        />
-          <Stack.Screen
+            />
+            <Stack.Screen
                 name="Signin"
                 component={Signin}
                 options={{
