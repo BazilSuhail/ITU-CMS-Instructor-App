@@ -599,9 +599,7 @@ const Marking = ({ route }) => {
 
                 </View>
             )}
-            <View className="h-[55px]">
-
-            </View>
+            <View className="h-[55px]"></View>
         </ScrollView>
     );
 };

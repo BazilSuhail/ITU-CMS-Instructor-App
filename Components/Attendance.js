@@ -285,6 +285,8 @@ const Attendance = ({ route }) => {
         handleDateConfirm={handleDateConfirm}
         setShowDatePicker={setShowDatePicker}
       />
+      
+      <View className="h-[55px]"></View>
     </View>
   );
 };
