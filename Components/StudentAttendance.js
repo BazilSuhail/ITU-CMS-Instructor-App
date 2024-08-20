@@ -36,7 +36,7 @@ const StudentAttendance = ({ student, attendance, onAttendanceChange }) => {
   ];
 
   return (
-    <View className="flex-row items-center justify-between px-2 py-[8px] bg-gray-100 rounded-md mx-4">
+    <View className="flex-row items-center mt-[8px] justify-between px-2 py-[8px] bg-gray-100 rounded-md mx-4">
       <Text className="text-lg font-medium text-gray-800">{student.name}</Text>
       <View className={`w-[125px] h-[35px] pl-[32px] rounded-lg ${getBackgroundColor(selectedValue)} justify-center`}>
         <Dropdown

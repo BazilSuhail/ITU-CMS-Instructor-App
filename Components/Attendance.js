@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, Modal, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, Button, Modal, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { fs } from '../Config/Config';
 import StudentAttendance from './StudentAttendance';
@@ -15,7 +15,7 @@ const Heading = ({ courseData, onBack, onUpdateAttendance, onMarkAttendance }) =
         <Ionicons name="arrow-back" onPress={onBack} size={26} color="#003F92" />
         {courseData && (
           <Text className="text-xl ml-[8px] font-bold text-blue-700 text-center my-3">
-            {courseData.courseName} <Text className="text-blue-900">Attendance</Text>
+            {courseData.courseName.split(' ').map(word => word[0].toUpperCase()).join('')} 's <Text className="text-blue-900">Attendance</Text>
           </Text>
         )}
       </View>
@@ -242,7 +242,7 @@ const Attendance = ({ route }) => {
   const isSaveEnabled = () => selectedDate && Object.keys(attendance).length > 0;
 
   return (
-    <View className="flex px-4 pt-[48px] bg-gray-100">
+    <ScrollView className="flex px-4 pt-[48px] bg-gray-100">
 
       <Heading
         courseData={courseData}
@@ -287,7 +287,7 @@ const Attendance = ({ route }) => {
       />
       
       <View className="h-[55px]"></View>
-    </View>
+    </ScrollView>
   );
 };
 

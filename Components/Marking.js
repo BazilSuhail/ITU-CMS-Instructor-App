@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { fs } from '../Config/Config';
 import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 const Marking = ({ route }) => {
     const { assignCourseId } = route.params;
+    const navigation = useNavigation();
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -170,7 +172,7 @@ const Marking = ({ route }) => {
             <View className="w-[100%] h-[2px] bg-blue-800 self-center my-4"></View>
 
             {loading ? (
-                <View >
+                <View className="flex justify-center items-center h-screen">
                     <ActivityIndicator size="large" color="#003f92" />
                 </View>
             ) : error ? (

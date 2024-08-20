@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, Image, Modal, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, ImageBackground,Image, Modal, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, fs } from '../Config/Config';
 import itu from "../assets/itu.png";
 import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons from Expo
+
+import img1 from "../assets/img1.jpg";
+import img2 from "../assets/img2.jpg";
+import img3 from "../assets/img3.jpg";
+import img4 from "../assets/img4.jpg";
+import img5 from "../assets/img5.jpg";
 
 const Students = () => {
     const [courses, setCourses] = useState([]);
@@ -12,6 +18,8 @@ const Students = () => {
     const [error, setError] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false); // State to manage modal visibility
     const navigation = useNavigation();
+
+    const images = [img1, img2, img3, img4, img5];
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -103,32 +111,40 @@ const Students = () => {
             });
     };
 
-    const renderCourseItem = (item) => (
-        <TouchableOpacity
-            key={item.assignCourseId}
-            onPress={() => handleNavigateToCourse(item.assignCourseId)}
-            className="bg-blue-950 flex justify-between h-[120px] rounded-lg m-1 py-4 px-3"
-        >
-            <Text className="text-xl font-medium text-white my-2">
-                {item.courseName}
-            </Text>
-
-            <View className="flex-row justify-between items-center">
-                <Text className="text-md text-gray-300 font-medium">
-                    {item.className}
-                </Text>
-                <View className="flex-row items-center">
-                    <Text className="text-white text-sm">
-                        Credit.Hrs:
+    const renderCourseItem = (item, index) => {
+        const image = images[index % images.length]; // Select image based on index
+    
+        return (
+            <TouchableOpacity
+                key={item.assignCourseId}  // Unique key prop
+                onPress={() => handleNavigateToCourse(item.assignCourseId)}
+                className="rounded-lg m-1"
+            >
+                <ImageBackground
+                    source={image}
+                    resizeMode="cover"
+                    className="flex justify-between h-[120px] rounded-lg py-4 px-3"
+                    imageStyle={{ borderRadius: 10 }}  // Ensure the image respects the border radius
+                >
+                    <Text className="text-xl font-medium text-white my-2">
+                        {item.courseName}
                     </Text>
-                    <Text className="font-extrabold text-sm bg-gray-300 text-center px-2 ml-1 text-blue-950 rounded-md">
-                        {item.creditHours}
-                    </Text>
-                </View>
-            </View>
-        </TouchableOpacity>
-    );
-
+    
+                    <View className="flex-row justify-between items-center">
+                        <Text className="text-md text-gray-300 font-medium">
+                            {item.className}
+                        </Text>
+                        <View className="flex-row items-center">
+                            <Text className="text-white text-sm">Credit.Hrs:</Text>
+                            <Text className="font-extrabold text-sm bg-gray-300 text-center px-2 ml-1 text-blue-950 rounded-md">
+                                {item.creditHours}
+                            </Text>
+                        </View>
+                    </View>
+                </ImageBackground>
+            </TouchableOpacity>
+        );
+    };
     return (
         <ScrollView className="flex-1 bg-gray-100">
             <View className="w-screen pt-[45px] bg-custom-blue h-[105px] flex-row justify-between items-center px-2">
@@ -148,7 +164,7 @@ const Students = () => {
                 <View className="w-[100%] h-[2px] bg-blue-800 self-center my-4"></View>
 
                 {loading ? (
-                    <View className="flex-1 justify-center items-center">
+                    <View className="flex-1 h-screen justify-center items-center">
                         <ActivityIndicator size="large" color="#0000ff" />
                     </View>
                 ) : error ? (
@@ -158,7 +174,7 @@ const Students = () => {
                 ) : (
                     <View>
                         {courses.length > 0 ? (
-                            courses.map(renderCourseItem)
+                            courses.map((item, index) => renderCourseItem(item, index))
                         ) : (
                             <Text>No courses assigned.</Text>
                         )}

@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, fs } from '../Config/Config';
+
+import img1 from "../assets/img1.jpg";
+import img2 from "../assets/img2.jpg";
+import img3 from "../assets/img3.jpg";
+import img4 from "../assets/img4.jpg";
+import img5 from "../assets/img5.jpg";
 
 const CoursesTaught = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigation = useNavigation();
+
+    const images = [img1, img2, img3, img4, img5];
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -59,28 +67,41 @@ const CoursesTaught = () => {
         navigation.navigate('Marking', { assignCourseId });
     };
 
-    const renderCourseItem = (item) => (
-        <View key={item.assignCourseId} className="bg-blue-950 h-[140px] flex flex-col rounded-lg m-[5px] text-white px-[15px] py-[10px]" >
-            <Text className="text-xl font-medium text-white my-[8px]">{item.courseName}</Text>
+    const renderCourseItem = (item, index) => {
+        // Assuming images is an array of image sources
+        const image = images[index % images.length]; // Select image based on index
 
-            <View className="flex-row mt-[3px] mb-[5px] justify-between items-center">
-                <Text className="text-[16px] text-gray-400 font-bold">{item.className}</Text>
-                <View className="flex-row">
-                    <Text className="text-white text-[12px]"> Credit.Hrs: </Text>
-                    <Text className="font-extrabold text-[12px] bg-gray-300 text-center px-[8px] ml-[4px] text-blue-950 rounded-md ">{item.creditHours}</Text>
+        return (
+            <ImageBackground
+            key={item.assignCourseId}
+                source={image}
+                resizeMode="cover"
+                className="h-[140px] flex flex-col rounded-lg m-[5px] px-[15px] py-[10px]"
+                imageStyle={{ borderRadius: 10 }}
+            >
+                <Text className="text-xl font-medium text-white my-[8px]">{item.courseName}</Text>
+
+                <View className="flex-row mt-[3px] mb-[5px] justify-between items-center">
+                    <Text className="text-[16px] text-gray-200 font-bold">{item.className}</Text>
+                    <View className="flex-row">
+                        <Text className="text-white text-[12px]"> Credit.Hrs: </Text>
+                        <Text className="font-extrabold text-[12px] bg-gray-300 text-center px-[8px] ml-[4px] text-blue-950 rounded-md ">
+                            {item.creditHours}
+                        </Text>
+                    </View>
                 </View>
-            </View>
 
-            <View className="ml-auto mt-[8px]  flex-row ">
-                <TouchableOpacity onPress={() => handleNavigateToCourse(item.assignCourseId)} className="font-medium mr-[8px] bg-red-900 px-[8px] py-[4px] rounded-md">
-                    <Text className="text-white text-[15px] text-center">Mark Attendance</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleNavigateToMarkingCourse(item.assignCourseId)} className="font-medium bg-green-800 px-[8px] py-[4px] rounded-md">
-                    <Text className="text-white text-[15px] text-center">Grade Students</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+                <View className="ml-auto mt-[8px] flex-row">
+                    <TouchableOpacity onPress={() => handleNavigateToCourse(item.assignCourseId)} className="font-medium mr-[8px] bg-red-900 px-[8px] py-[4px] rounded-md">
+                        <Text className="text-white text-[15px] text-center">Mark Attendance</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleNavigateToMarkingCourse(item.assignCourseId)} className="font-medium bg-green-800 px-[8px] py-[4px] rounded-md">
+                        <Text className="text-white text-[15px] text-center">Grade Students</Text>
+                    </TouchableOpacity>
+                </View>
+            </ImageBackground>
+        );
+    };
 
     return (
         <ScrollView className="h-full w-full px-[8px] pt-[50px] bg-gray-100">
@@ -93,7 +114,7 @@ const CoursesTaught = () => {
                 </View>
 
                 {loading ? (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <View className="flex h-screen items-center justify-center">
                         <ActivityIndicator size="large" color="#0000ff" />
                     </View>
                 ) : error ? (
@@ -103,13 +124,14 @@ const CoursesTaught = () => {
                 ) : (
                     <View>
                         {courses.length > 0 ? (
-                            courses.map(renderCourseItem)
+                            courses.map((item, index) => renderCourseItem(item, index))
                         ) : (
                             <Text>No courses assigned.</Text>
                         )}
                     </View>
                 )}
             </View>
+            <View className="h-[85px]"></View>
         </ScrollView>
     );
 };
