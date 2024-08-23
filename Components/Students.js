@@ -112,7 +112,7 @@ const Students = () => {
     };
 
     const renderCourseItem = (item, index) => {
-        const image = images[index % images.length]; // Select image based on index
+        const image = images[index % images.length];
     
         return (
             <TouchableOpacity
@@ -124,7 +124,7 @@ const Students = () => {
                     source={image}
                     resizeMode="cover"
                     className="flex justify-between h-[120px] rounded-lg py-4 px-3"
-                    imageStyle={{ borderRadius: 10 }}  // Ensure the image respects the border radius
+                    imageStyle={{ borderRadius: 10 }} 
                 >
                     <Text className="text-xl font-medium text-white my-2">
                         {item.courseName}
