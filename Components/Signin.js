@@ -42,7 +42,7 @@ const SignIn = () => {
     }
   };
   const handlePress = () => {
-    Linking.openURL("https://itu-cms.netlify.app/").catch((err) => console.error('Failed to open URL:', err));
+    Linking.openURL("https://itu-admin.netlify.app/").catch((err) => console.error('Failed to open URL:', err));
   };
 
   return (
@@ -102,7 +102,7 @@ const SignIn = () => {
         </TouchableOpacity>
         <Text className="text-center text-white mt-[10px]">
         <Text>  Access Portal Online via  </Text> 
-          <Text className="text-blue-400  underline font-bold" onPress={handlePress}>ITU | CMS-Portal</Text> 
+          <Text className="text-blue-400  underline font-bold" onPress={handlePress}>ITU | Admin-Portal</Text> 
         </Text>
       </Animated.View>
     </View>

@@ -78,7 +78,7 @@ const StartupAnimation = ({ onAnimationEnd }) => {
         }}
         className="text-2xl mt-[25px] text-white ml-2 font-bold"
       >
-        ITU-Student Portal
+        ITU-Instructor Portal
       </Animated.Text>
     </Animated.View>
   );
