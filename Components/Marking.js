@@ -8,7 +8,6 @@ import { Ionicons } from '@expo/vector-icons';
 const Marking = ({ route }) => {
     const { assignCourseId } = route.params;
     const navigation = useNavigation();
-
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [students, setStudents] = useState([]);
@@ -161,10 +160,7 @@ const Marking = ({ route }) => {
     };
 
     const totalWeightage = criteria.reduce((total, item) => total + parseFloat(item.weightage), 0);
-
-    //const allCriteriaFilled = criteria.every(c => c.assessment && c.weightage && c.totalMarks);
-    //const allMarksEntered = students.every(student => criteria.every(c => marks[student.id]?.[c.assessment] !== undefined));
-
+ 
     return (
         <ScrollView className="pt-[48px] px-4">
 
@@ -189,58 +185,6 @@ const Marking = ({ route }) => {
                             {/* Table-like structure */}
                             <ScrollView horizontal={true} className="flex">
                                 <View className="flex-col border border-gray-300 rounded-lg">
-                                    {/* 
-                                     <View key={index} className="flex-row border-b border-gray-300">
-                                        {editingCriteria === index ? (
-                                            <View className="flex-row">
-                                                <View className="w-[150px] p-2 border-r border-gray-300">
-                                                    <TextInput
-                                                        className="border border-gray-300 p-2 rounded"
-                                                        value={criterion.assessment}
-                                                        onChangeText={(text) =>
-                                                            setCriteria((prev) =>
-                                                                prev.map((item, i) =>
-                                                                    i === index ? { ...item, assessment: text } : item
-                                                                )
-                                                            )
-                                                        }
-                                                    />
-                                                </View>
-                                                <View className="w-[150px] p-2 border-r border-gray-300">
-                                                    <TextInput
-                                                        className="border border-gray-300 p-2 rounded"
-                                                        value={criterion.weightage}
-                                                        keyboardType="numeric"
-                                                        onChangeText={(text) =>
-                                                            setCriteria((prev) =>
-                                                                prev.map((item, i) =>
-                                                                    i === index ? { ...item, weightage: text } : item
-                                                                )
-                                                            )
-                                                        }
-                                                    />
-                                                </View>
-                                                <View className="w-[150px] p-2 border-r border-gray-300">
-                                                    <TextInput
-                                                        className="border border-gray-300 p-2 rounded"
-                                                        value={criterion.totalMarks}
-                                                        keyboardType="numeric"
-                                                        onChangeText={(text) =>
-                                                            setCriteria((prev) =>
-                                                                prev.map((item, i) =>
-                                                                    i === index ? { ...item, totalMarks: text } : item
-                                                                )
-                                                            )
-                                                        }
-                                                    />
-                                                </View>
-                                                <View className="w-[150px] p-2">
-                                                    <Button title="Update" onPress={handleSaveMarks} disabled={!allCriteriaFilled || !allMarksEntered} />
-                                                </View>
-                                            </View>
-
-                                     */}
-
                                     <View className="flex-row bg-gray-200 border-b border-gray-300">
                                         <View className="w-[150px] p-2 border-r border-gray-300">
                                             <Text className="font-bold">Student Name</Text>
@@ -262,8 +206,7 @@ const Marking = ({ route }) => {
 
 
                                     {students.map((student) => (
-                                        <View key={student.id} className="flex-row bg-white border-b border-gray-300">
-                                            {/*<Text className="text-center p-2 flex-1"></Text> */}
+                                        <View key={student.id} className="flex-row bg-white border-b border-gray-300"> 
                                             <View className="w-[150px] p-2 border-r border-gray-300">
                                                 <Text className="font-bold">{student.name}</Text>
                                             </View>
@@ -290,17 +233,7 @@ const Marking = ({ route }) => {
                                                         <Text className="font-bold">
                                                             {marks[student.id]?.[criterion.assessment] || ''}
                                                         </Text>
-                                                    }
-
-                                                    {/*
-                                                    <Text className="text-center p-2">
-                                                        {marks[student.id]?.[criterion.assessment] !== undefined
-                                                            ? (
-                                                                (marks[student.id][criterion.assessment] / criterion.totalMarks) * criterion.weightage
-                                                            ).toFixed(2)
-                                                            : ''}
-                                                    </Text>
-                                                     */}
+                                                    } 
                                                 </View>
                                             ))}
 
@@ -337,67 +270,8 @@ const Marking = ({ route }) => {
                                         </View>
                                     ))}
 
-                                    {/* Data Rows 
-                                    {students.map((student) => (
-                                        <View key={student.id} className="flex-row border-b border-gray-300 p-2">
-                                            <Text className="text-center p-2 flex-1">{student.name}</Text>
-                                            {criteria.map((criterion, index) => (
-                                                <View key={index} className="flex-col flex-1">
-                                                    <TextInput
-                                                        className="text-center border border-gray-300 p-2"
-                                                        value={marks[student.id]?.[criterion.assessment]?.toString() || ''}
-                                                        keyboardType="numeric"
-                                                        onChangeText={(text) => {
-                                                            const parsedValue = text ? parseInt(text, 10) : '';
-                                                            setMarks((prev) => ({
-                                                                ...prev,
-                                                                [student.id]: {
-                                                                    ...prev[student.id],
-                                                                    [criterion.assessment]: parsedValue,
-                                                                },
-                                                            }));
-                                                        }}
-                                                        editable={isEditing}
-                                                    />
-                                                    <Text className="text-center p-2">
-                                                        {marks[student.id]?.[criterion.assessment] || ''}
-                                                    </Text>
-                                                    <Text className="text-center p-2">
-                                                        {marks[student.id]?.[criterion.assessment] !== undefined
-                                                            ? (
-                                                                (marks[student.id][criterion.assessment] / criterion.totalMarks) * criterion.weightage
-                                                            ).toFixed(2)
-                                                            : ''}
-                                                    </Text>
-                                                </View>
-                                            ))}
-                                            <Picker
-                                                selectedValue={marks[student.id]?.grade || 'I'}
-                                                className="flex-1 h-10"
-                                                onValueChange={(itemValue) =>
-                                                    setMarks((prev) => ({
-                                                        ...prev,
-                                                        [student.id]: {
-                                                            ...prev[student.id],
-                                                            grade: itemValue,
-                                                        },
-                                                    }))
-                                                }
-                                            >
-                                                {grades.map((grade) => (
-                                                    <Picker.Item key={grade} label={grade} value={grade} />
-                                                ))}
-                                            </Picker>
-                                        </View>
-                                    ))}
-                                */}
                                 </View>
-                            </ScrollView>
-
-                            {/*  <View className="mt-[15px] flex-row space-x-4">
-                                <Button title="Save Marks" onPress={handleSaveMarks} disabled={!allCriteriaFilled || !allMarksEntered} />
-                                <Button title={isEditing ? 'Stop Editing' : 'Edit Marks'} onPress={() => setIsEditing(!isEditing)} />
-                                    </View> */}
+                            </ScrollView> 
                             <View className="mt-[15px] flex-row justify-between">
                                 <TouchableOpacity onPress={handleSaveMarks} className="bg-blue-600  mb-[20px] rounded-lg px-2 py-1">
                                     <Text className="font-bold text-md text-center text-white">Save Marks</Text>
@@ -416,8 +290,8 @@ const Marking = ({ route }) => {
                         <Text className="text-xl font-bold un text-blue-900 ">  Add Marks</Text>
                     </View>
 
-                    <View className="p-3 bg-white border border-gray-400 rounded-lg mb-[15px]">
-                        {/*<Button title="Add-Up Marks Of Assessments" onPress={() => setIsAddingMarks(true)} /> */}
+                            <View className="p-3 bg-white border border-gray-400 rounded-lg mb-[15px]">
+                                
                         <TouchableOpacity onPress={() => setIsAddingMarks(true)} className="bg-blue-200 mb-[20px] rounded-lg border border-blue-600 py-2">
                             <Text className="font-bold text-lg text-center text-blue-700">Add-Up Marks Of Assessments</Text>
                         </TouchableOpacity>
@@ -449,7 +323,7 @@ const Marking = ({ route }) => {
                                                 />
                                             </View>
                                         ))}
-                                        {/*<Button title="Add Results" onPress={handleSaveAddMarks} /> */}
+                                                
                                         <TouchableOpacity onPress={handleSaveAddMarks} className="bg-green-900 w-[200px] mx-auto py-1 mb-[12px] rounded-lg">
                                             <Text className="font-bold text-lg text-center text-white">Update</Text>
                                         </TouchableOpacity>
@@ -531,10 +405,7 @@ const Marking = ({ route }) => {
                                                             )
                                                         }
                                                     />
-                                                </View>
-                                                {/* <View className="w-[150px] p-2">
-                                                    <Button title="Update" onPress={handleSaveMarks} disabled={!allCriteriaFilled || !allMarksEntered} />
-                                                </View> */}
+                                                </View> 
                                                 <TouchableOpacity onPress={handleSaveMarks} className="bg-green-700 w-[100px] ml-[30px] my-[12px] rounded-lg">
                                                     <Text className="font-bold text-sm mt-[4px] text-center text-white">Update</Text>
                                                 </TouchableOpacity>

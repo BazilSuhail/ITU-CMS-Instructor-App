@@ -73,19 +73,19 @@ const EditAttendance = ({ assignCourseId, students, attendanceDates = [] }) => {
       <Text className="text-blue-900 font-semibold text-lg underline">Select a Date to Update:</Text>
       <View
         style={{
-          backgroundColor: "#001433", // Background color for the picker
-          borderRadius: 15, // Border radius for the picker
-          overflow: 'hidden', // Ensures border radius is respected
-          margin: 5, // Optional: add margin if needed
+          backgroundColor: "#001433", 
+          borderRadius: 15, 
+          overflow: 'hidden', 
+          margin: 5, 
         }}
       >
         <Picker
           selectedValue={viewDate}
           onValueChange={(date) => setViewDate(date)}
           style={{
-            height: 50, // Adjust as needed
-            width: '100%', // Adjust as needed
-            color: '#FFFFFF', // Text color
+            height: 50, 
+            width: '100%', 
+            color: '#FFFFFF',
           }}
         >
           <Picker.Item label="Select a date" value="" />

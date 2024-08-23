@@ -9,12 +9,12 @@ const StudentAttendance = ({ student, attendance, onAttendanceChange }) => {
 
   const getBackgroundColor = (value) => {
     if (value === 'true') {
-      return 'bg-green-700'; // soft green
+      return 'bg-green-700';
     }
     if (value === 'false') {
-      return 'bg-red-500'; // soft red
+      return 'bg-red-500';
     }
-    return 'bg-gray-400'; // light gray
+    return 'bg-gray-400';
   };
 
   const selectedValue = attendance[student.id] !== undefined ? attendance[student.id].toString() : '';
@@ -46,12 +46,12 @@ const StudentAttendance = ({ student, attendance, onAttendanceChange }) => {
           value={selectedValue}
           onChange={handleChange}
           placeholder={getPlaceholderText()}
-          placeholderStyle={{ color: 'white', fontWeight: '500' }} // White placeholder text
-          itemContainerStyle={{ backgroundColor: 'gray-800',paddingLeft:"-32px" }} // Background color of dropdown items
-          itemTextStyle={{ color: 'black' }} // White text for dropdown items
-          selectedTextStyle={{ color: 'white' }} // White text for selected item
-          style={{ padding: 0 }} // Remove extra padding
-          renderRightIcon={() => null} // Hide the dropdown arrow icon
+          placeholderStyle={{ color: 'white', fontWeight: '500' }} 
+          itemContainerStyle={{ backgroundColor: 'gray-800',paddingLeft:"-32px" }}
+          itemTextStyle={{ color: 'black' }} 
+          selectedTextStyle={{ color: 'white' }} 
+          style={{ padding: 0 }} 
+          renderRightIcon={() => null} 
         />
       </View>
     </View>

@@ -163,7 +163,7 @@ const Attendance = ({ route }) => {
               setLatestAttendance(latest);
             }
           } else {
-            setAttendanceDates([]); // Ensure this is set even if no document exists
+            setAttendanceDates([]); 
           }
         } else {
           setError('No assignment data found');

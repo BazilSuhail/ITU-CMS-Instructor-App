@@ -15,7 +15,7 @@ const Courses = () => {
                 component={CoursesTaught}
                 options={{
                     title: 'CoursesTaught',
-                    headerShown: false // Hide the header for this screen
+                    headerShown: false
                 }}
             />
              <Stack.Screen
@@ -23,7 +23,7 @@ const Courses = () => {
                 component={Attendance}
                 options={{
                     title: 'View Attendance',
-                    headerShown: false // Hide the header for this screen
+                    headerShown: false
                 }}
             />
             
@@ -32,7 +32,7 @@ const Courses = () => {
                 component={Marking}
                 options={{
                     title: 'View Marks',
-                    headerShown: false // Hide the header for this screen
+                    headerShown: false
                 }}
             />
         </Stack.Navigator>

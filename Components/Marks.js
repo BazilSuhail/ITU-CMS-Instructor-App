@@ -13,18 +13,18 @@ const Marks = () => {
                 component={ViewMarks}
                 options={{
                     title: 'View Marks',
-                    headerShown: false // Hide the header for this screen
+                    headerShown: false 
                 }}
             />
            <Stack.Screen
                 name="MarksOfSubject"
                 component={MarksOfSubject}
                 options={({ route }) => ({
-                    title: route.params?.courseName || 'Marks Of Subject', // Fallback title
+                    title: route.params?.courseName || 'Marks Of Subject', 
                     headerStyle: {
-                        backgroundColor: '#001433', // Custom background color for this screen
+                        backgroundColor: '#001433', 
                     },
-                    headerTintColor: '#FFFFFF', // Custom text color for this screen
+                    headerTintColor: '#FFFFFF', 
                 })}
             />
         </Stack.Navigator>

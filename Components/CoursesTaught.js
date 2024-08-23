@@ -67,9 +67,8 @@ const CoursesTaught = () => {
         navigation.navigate('Marking', { assignCourseId });
     };
 
-    const renderCourseItem = (item, index) => {
-        // Assuming images is an array of image sources
-        const image = images[index % images.length]; // Select image based on index
+    const renderCourseItem = (item, index) => { 
+        const image = images[index % images.length];  
 
         return (
             <ImageBackground

@@ -29,20 +29,17 @@ const Students = () => {
             try {
                 const currentUser = auth.currentUser;
 
-                if (currentUser) {
-                    // Fetch instructor's name
+                if (currentUser) { 
                     const instructorDoc = await fs.collection('instructors').doc(currentUser.uid).get();
                     if (instructorDoc.exists) {
-                        const fullName = instructorDoc.data().name || '';
-                        // Extract the first two words
+                        const fullName = instructorDoc.data().name || ''; 
                         const nameParts = fullName.split(' ');
                         const shortName = nameParts.slice(0, 2).join(' ');
                         setInstructorName(shortName);
                     } else {
                         setError('Instructor not found');
                     }
-
-                    // Fetch assigned courses
+ 
                     const assignCoursesSnapshot = await fs.collection('assignCourses')
                         .where('instructorId', '==', currentUser.uid)
                         .get();

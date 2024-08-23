@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator,ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { fs } from '../Config/Config'; // Adjust import as needed
+import { fs } from '../Config/Config'; 
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -21,8 +21,6 @@ const StudentList = ({ route }) => {
                 const assignmentDoc = await fs.collection('assignCourses').doc(assignCourseId).get();
                 if (assignmentDoc.exists) {
                     const assignmentData = assignmentDoc.data();
-
-                    // Fetch students enrolled in this course
                     const studentsSnapshot = await fs.collection('students').get();
                     const studentsList = studentsSnapshot.docs
                         .filter(doc => doc.data().currentCourses.includes(assignCourseId))
