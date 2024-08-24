@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, Modal, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, Button, Modal, TouchableOpacity, ActivityIndicator, ScrollView, StatusBar } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { fs } from '../Config/Config';
 import StudentAttendance from './StudentAttendance';
@@ -163,7 +163,7 @@ const Attendance = ({ route }) => {
               setLatestAttendance(latest);
             }
           } else {
-            setAttendanceDates([]); 
+            setAttendanceDates([]);
           }
         } else {
           setError('No assignment data found');
@@ -242,52 +242,59 @@ const Attendance = ({ route }) => {
   const isSaveEnabled = () => selectedDate && Object.keys(attendance).length > 0;
 
   return (
-    <ScrollView className="flex px-4 pt-[48px] bg-gray-100">
+    <>
+      <StatusBar
+        backgroundColor='#f3f4f6'
+        barStyle='light-content'
+      />
+      <ScrollView className="flex px-4 bg-gray-100">
 
-      <Heading
-        courseData={courseData}
-        onBack={() => navigation.goBack()}
-        onMarkAttendance={() => setViewMode('mark')}
-        onUpdateAttendance={() => setViewMode('update')}
-      />
-      {error && <Text className="text-red-600">{error}</Text>}
-      {loading ? (
-        <View className="flex justify-center items-center h-screen">
-          <ActivityIndicator size="large" color="#007bff" />
-        </View>
-      ) : viewMode === 'mark' ? (
-        <>
-          <Header
-            formLoading={formLoading}
-            selectedDate={selectedDate}
-            setShowDatePicker={setShowDatePicker}
-            handleSaveAttendance={handleSaveAttendance}
-            isSaveEnabled={isSaveEnabled}
-          />
-          <MarkAttendance
-            students={students}
-            attendance={attendance}
-            handleAttendanceChange={handleAttendanceChange}
-            selectedDate={selectedDate}
-            handleSaveAttendance={handleSaveAttendance}
-            isSaveEnabled={isSaveEnabled}
-          />
-        </>
-      ) : (
-        <EditAttendance
-          assignCourseId={assignCourseId}
-          students={students}
-          attendanceDates={attendanceDates}
+        <Heading
+          courseData={courseData}
+          onBack={() => navigation.goBack()}
+          onMarkAttendance={() => setViewMode('mark')}
+          onUpdateAttendance={() => setViewMode('update')}
         />
-      )}
-      <DatePickerModal
-        showDatePicker={showDatePicker}
-        handleDateConfirm={handleDateConfirm}
-        setShowDatePicker={setShowDatePicker}
-      />
-      
-      <View className="h-[55px]"></View>
-    </ScrollView>
+        {error && <Text className="text-red-600">{error}</Text>}
+        {loading ? (
+          <View className="flex justify-center items-center h-screen">
+            <ActivityIndicator size="large" color="#007bff" />
+          </View>
+        ) : viewMode === 'mark' ? (
+          <>
+            <Header
+              formLoading={formLoading}
+              selectedDate={selectedDate}
+              setShowDatePicker={setShowDatePicker}
+              handleSaveAttendance={handleSaveAttendance}
+              isSaveEnabled={isSaveEnabled}
+            />
+            <MarkAttendance
+              students={students}
+              attendance={attendance}
+              handleAttendanceChange={handleAttendanceChange}
+              selectedDate={selectedDate}
+              handleSaveAttendance={handleSaveAttendance}
+              isSaveEnabled={isSaveEnabled}
+            />
+          </>
+        ) : (
+          <EditAttendance
+            assignCourseId={assignCourseId}
+            students={students}
+            attendanceDates={attendanceDates}
+          />
+        )}
+        <DatePickerModal
+          showDatePicker={showDatePicker}
+          handleDateConfirm={handleDateConfirm}
+          setShowDatePicker={setShowDatePicker}
+        />
+
+        <View className="h-[55px]"></View>
+      </ScrollView>
+
+    </>
   );
 };
 

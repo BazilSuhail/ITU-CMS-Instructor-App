@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator,ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, ScrollView, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { fs } from '../Config/Config'; 
+import { fs } from '../Config/Config';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -61,30 +61,37 @@ const StudentList = ({ route }) => {
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false} className="flex-1 pt-[48px] px-4 bg-gray-100">
+        <>
+            <StatusBar
+                backgroundColor='#f3f4f6'
+                barStyle='light-content'
+            />
+            <ScrollView showsVerticalScrollIndicator={false} className="flex-1 pt-2 px-4 bg-gray-100">
 
-            <Ionicons name="arrow-back" onPress={() => navigation.goBack()} size={26} color="#003F92" />
-            <View className="w-[100%] h-[2px] bg-blue-800 self-center my-4"></View>
+                <Ionicons name="arrow-back" onPress={() => navigation.goBack()} size={26} color="#003F92" />
+                <View className="w-[100%] h-[2px] bg-blue-800 self-center my-3"></View>
 
-            {students.length > 0 ? (
-                students.map(student => (
-                    <View key={student.id} className="mb-4 flex-row items-center">
-                        <View className="w-[35px] overflow-hidden rounded-full mr-[15px] h-[35px] bg-gray-400">
-                        <View className="w-[12px] rounded-full mt-[5px] ml-[11px] h-[12px] bg-gray-700"></View>
-                            <View className="w-[25px] rounded-full ml-[5px] mt-[4px] h-[20px] bg-gray-600"></View>
+                {students.length > 0 ? (
+                    students.map(student => (
+                        <View key={student.id} className="mb-4 flex-row items-center">
+                            <View className="w-[35px] overflow-hidden rounded-full mr-[15px] h-[35px] bg-gray-400">
+                                <View className="w-[12px] rounded-full mt-[5px] ml-[11px] h-[12px] bg-gray-700"></View>
+                                <View className="w-[25px] rounded-full ml-[5px] mt-[4px] h-[20px] bg-gray-600"></View>
+                            </View>
+
+                            <View>
+                                <Text className="text-lg font-bold">{student.name}</Text>
+                                <Text className="text-gray-600">{student.rollNumber}</Text>
+                            </View>
                         </View>
+                    ))
+                ) : (
+                    <Text className="text-center text-gray-600">No students enrolled in this course</Text>
+                )}
+                <View className="h-[85px]"></View>
+            </ScrollView>
 
-                        <View>
-                            <Text className="text-lg font-bold">{student.name}</Text>
-                            <Text className="text-gray-600">{student.rollNumber}</Text>
-                        </View>
-                    </View>
-                ))
-            ) : (
-                <Text className="text-center text-gray-600">No students enrolled in this course</Text>
-            )}
-            <View className="h-[85px]"></View>
-        </ScrollView>
+        </>
     );
 };
 

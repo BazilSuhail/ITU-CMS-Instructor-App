@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, ImageBackground, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth, fs } from '../Config/Config';
 
@@ -67,12 +67,12 @@ const CoursesTaught = () => {
         navigation.navigate('Marking', { assignCourseId });
     };
 
-    const renderCourseItem = (item, index) => { 
-        const image = images[index % images.length];  
+    const renderCourseItem = (item, index) => {
+        const image = images[index % images.length];
 
         return (
             <ImageBackground
-            key={item.assignCourseId}
+                key={item.assignCourseId}
                 source={image}
                 resizeMode="cover"
                 className="h-[140px] flex flex-col rounded-lg m-[5px] px-[15px] py-[10px]"
@@ -103,35 +103,42 @@ const CoursesTaught = () => {
     };
 
     return (
-        <ScrollView className="h-full w-full px-[8px] pt-[50px] bg-gray-100">
-            <View>
-                <Text className="text-custom-blue text-2xl font-bold ml-[2px]">Courses:</Text>
+        <>
+            <StatusBar
+                backgroundColor='#f3f4f6'
+                barStyle='light-content'
+            />
+            <ScrollView className="h-full w-full px-[8px] bg-gray-100">
+                <View>
+                    <Text className="text-custom-blue text-2xl font-bold ml-[2px]">Courses:</Text>
 
-                <View className="border-2 border-gray-300 h-[105px] flex flex-col justify-between rounded-lg m-[5px] text-white px-[15px] py-[15px]" >
-                    <Text className="text-xl font-bold text-blue-950 ">This Week</Text>
-                    <Text className="text-[14px]  text-gray-400 font-bold">This week no work coming up immediately.</Text>
+                    <View className="border-2 border-gray-300 h-[105px] flex flex-col justify-between rounded-lg m-[5px] text-white px-[15px] py-[15px]" >
+                        <Text className="text-xl font-bold text-blue-950 ">This Week</Text>
+                        <Text className="text-[14px]  text-gray-400 font-bold">This week no work coming up immediately.</Text>
+                    </View>
+
+                    {loading ? (
+                        <View className="flex h-screen items-center justify-center">
+                            <ActivityIndicator size="large" color="#0000ff" />
+                        </View>
+                    ) : error ? (
+                        <View className="flex-1 justify-center items-center">
+                            <Text>Error: {error}</Text>
+                        </View>
+                    ) : (
+                        <View>
+                            {courses.length > 0 ? (
+                                courses.map((item, index) => renderCourseItem(item, index))
+                            ) : (
+                                <Text>No courses assigned.</Text>
+                            )}
+                        </View>
+                    )}
                 </View>
+                <View className="h-[85px]"></View>
+            </ScrollView>
 
-                {loading ? (
-                    <View className="flex h-screen items-center justify-center">
-                        <ActivityIndicator size="large" color="#0000ff" />
-                    </View>
-                ) : error ? (
-                    <View className="flex-1 justify-center items-center">
-                        <Text>Error: {error}</Text>
-                    </View>
-                ) : (
-                    <View>
-                        {courses.length > 0 ? (
-                            courses.map((item, index) => renderCourseItem(item, index))
-                        ) : (
-                            <Text>No courses assigned.</Text>
-                        )}
-                    </View>
-                )}
-            </View>
-            <View className="h-[85px]"></View>
-        </ScrollView>
+        </>
     );
 };
 

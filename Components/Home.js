@@ -29,7 +29,7 @@ const Courses = () => {
                 name="Signin"
                 component={Signin}
                 options={{
-                    title: 'StudentList',
+                    title: 'Signin',
                     headerShown: false 
                 }}
             />

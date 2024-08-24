@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, Image, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, Image, ScrollView,StatusBar } from 'react-native';
 import { auth, fs } from '../Config/Config';
 
 const ProfileScreen = () => {
@@ -52,8 +52,13 @@ const ProfileScreen = () => {
   }
 
   return (
+    <>
+    <StatusBar
+        backgroundColor='#f3f4f6'
+        barStyle='light-content'
+    />
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ backgroundColor: '#f5f5f5' }}>
-      <View className="flex-1 px-4 pt-[52px]">
+      <View className="flex-1 px-4 pt-[25px]">
         {userData ? (
           <View className="flex-1">
             <View className="items-center py-[10px] bg-custom-card-blue rounded-xl mb-6">
@@ -80,7 +85,9 @@ const ProfileScreen = () => {
           </View>
         )}
       </View>
-    </ScrollView>
+      </ScrollView>
+      
+    </>
   );
 };
 
