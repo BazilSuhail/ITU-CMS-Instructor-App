@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+## ITU Instructor App - University Management System
+This Instructor App is a role-specific module of the ITU University Management System that allows instructors to efficiently manage their assigned courses, student attendance, assessments, and grading tasks. This app is exclusively accessible to instructors and is designed for seamless academic management.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](#)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat&label=Contributions&colorA=red&colorB=black	)](#)
 
+## Project Overview
+
+- Instructors can securely log in to the system using their unique credentials.
+- Instructors can view a list of courses they are currently teaching.
+- By selecting a course, instructors can see all enrolled students along with detailed student lists.
+- A dedicated tab displays all courses taught by the instructor, each with options to manage attendance and marks.
+- Instructors can manage attendance by:
+  - Viewing all enrolled students against a selected date.
+  - Marking students as present or absent.
+  - Updating attendance records at any time.
+- Instructors can manage assessments and grading by:
+  - Creating assessments (e.g. quizzes, assignments, exams) for each course.
+  - Defining and updating grading criteria.
+  - Assigning, updating, and deleting marks for individual students.
+  - Modifying and deleting assessments if needed.
+  - Grading students based on the defined criteria.
+- Instructors have access to their personal profile screen:
+  - Displays instructor’s full profile information.
+  - Allows easy viewing of instructor-specific details.
+
+---
+
+### 🤖 Tech Stack 
+<a href="#"> 
+<img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-%23F7DF1E.svg?&style=for-the-badge&logo=javascript&logoColor=black"/>
+<img alt="React Native" src="https://img.shields.io/badge/React%20Native-%2320232a.svg?&style=for-the-badge&logo=react&logoColor=%2361DAFB"/>
+<img alt="React Native Reanimated" src="https://img.shields.io/badge/React%20Native%20Reanimated-%23845EC2.svg?&style=for-the-badge&logo=react&logoColor=%23FFFFFF"/>
+<img alt="NativeWind" src="https://img.shields.io/badge/NativeWind-%2306B6D4.svg?&style=for-the-badge&logo=tailwindcss&logoColor=white"/>
+<img alt="Firebase Realtime Database" src="https://img.shields.io/badge/Firebase%20Database-%23039BE5.svg?&style=for-the-badge&logo=firebase&logoColor=white"/>
+<img alt="Firebase" src="https://img.shields.io/badge/Firebase-%23039BE5.svg?&style=for-the-badge&logo=firebase&logoColor=white"/>
+<img alt="Firebase Auth" src="https://img.shields.io/badge/Firebase%20Auth-%23FFCA28.svg?&style=for-the-badge&logo=firebase&logoColor=black"/>
+</a>
+
+---
+ 
+#### Check out the latest demo of Project [ITU-Admin-Portal](https://entitysafe.netlify.app/pages/AppDetails/-O4tB8HAlHw2clk3cTlL). 
+
+![App Screenshot](https://github.com/Kharbooza978/EntitySafe/blob/main/Instructor-App/instructor_app1.png)
+
+---
+
+## Run Locally
+
+ Clone the project using following command
+```bash
+    git clone https://github.com/BazilSuhail/ITU-CMS-Instructor-App.git
+```
+Go to the project directory
+```bash
+    cd ITU-CMS-Instructor-App
+```
+Then **Run** this command in your terminal to install all required dependancies:
+```bash
+    npm install
+```
 In the project directory, you can run:
+```bash
+    npm expo start -c
+``` 
 
-### `npm start`
+Install **Expo GO** from playstore after scanning the QR code given interminal start the app.
+Another option is to get Android Studio Installed and type **a** in terminal to open the app in android studio itself
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+#### Secure Login
+- Only instructors can log in to the system.
+- Role-based access ensures security and restricts functionalities to instructor-specific tasks.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### Course Management
+- Instructors can view all courses they are currently teaching.
+- Clicking on a course displays the list of enrolled students.
+- Instructors can see how many students are enrolled in each course.
+- Provides detailed student information for each selected course.
 
-### `npm run build`
+#### Attendance Management
+- Instructors can access an attendance tab for each course they are teaching.
+- Can select a specific date to mark attendance.
+- Can mark each student as present or absent.
+- Can update attendance records at any time.
+- Allows quick and easy attendance tracking for every class session.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### Assessment and Grading Management
+- Instructors can create new assessments for their courses (quizzes, assignments, exams, etc.).
+- Can define and update grading criteria for each course.
+- Can assign marks to individual students for each assessment.
+- Can update or delete assigned marks if needed.
+- Can update or delete created assessments.
+- Can modify grading criteria anytime.
+- Can grade students based on the defined grading scheme.
+- Ensures flexible and accurate assessment management.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#### Profile Management
+- Instructors can access their personal profile screen.
+- Profile displays all relevant instructor information.
+- Allows instructors to view their account details easily.
